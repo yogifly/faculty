@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        /* Add styles to match the frontend */
+        body {
+            font-family: "Times New Roman", sans-serif;
+            background: url("images/bglogin.jpg") no-repeat center center fixed;
+            background-position: center center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            animation: fadeIn 1.5s ease-in-out;
+            position: relative;
+        }
+
+        .container {
+            display: grid;
+            position: relative;
+            isolation: isolate;
+            padding: 2rem;
+        }
+
+        .content {
+            min-width: 100vh;
+            width: 100%;
+            max-width: 450px;
+            margin-inline: auto;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            background-color: rgba(255, 255, 255, 0);
+            border-radius: 8px;
+        }
+
+        .content h1 {
+            margin-bottom: 1.5rem;
+            font-size: 2.75rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        .content p {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .input_group {
+            display: grid;
+            gap: 5px;
+            padding: 1rem;
+        }
+
+        .input_group label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            background-color: transparent;
+            border-bottom: 1px solid var(--text-light);
+        }
+
+        .input_group input {
+            padding: 0.75rem 0;
+            outline: none;
+            border: none;
+            font-size: 1rem;
+            border-radius: 10px;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .actions > div span {
+            color: var(--text-light);
+        }
+
+        .content button {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            outline: none;
+            border: none;
+            font-size: 1rem;
+            color: var(--white);
+            background-color: var(--text-dark);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .content button:hover {
+            color: var(--text-dark);
+            background-color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>Signup</h1>
+            <p>Please enter your details</p>
+            <form method="POST" action="/signup">
+                <div class="input_group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" required placeholder="&nbsp; &nbsp; Enter your Email">
+                </div>
+                <div class="input_group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" required placeholder="&nbsp; &nbsp;Enter your password">
+                </div>
+                <div class="input_group">
+                    <label for="user_type">User Type</label>
+                    <select name="user_type" required>
+                        <option value="user">User</option>
+                        <option value="organization">Organization</option>
+                    </select>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit">Signup</button>
+                </div>
+            </form>
+            <p>Already have an account?<br><br><a href="/login">Login here</a></p>
+        </div>
+    </div>
+</body>
+</html>

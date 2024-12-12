@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Scholar Author Lookup</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: url("images/bglogin.jpeg") no-repeat center center fixed;
+        background-size: cover;
+        background-color: #ffffff24;
+        color: #333;
+        line-height: 1.6;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        align-items: center; /* vertical centering */
+      }
+      .input-group {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      .input-group input {
+        width: 70%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-right: 10px;
+        font-size: 16px;
+      }
+      .input-group button {
+        padding: 10px 20px;
+        border: none;
+        background: #241002;
+        color: rgb(255, 255, 255);
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .input-group button:hover {
+        background: #241002;
+      }
+      #output {
+        margin-top: 20px;
+      }
+      .card {
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 6px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      .thumbnail {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 10px;
+      }
+      .btns {
+        margin-top: 10px;
+      }
+      .btns button {
+        margin-right: 10px;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background: #28a745;
+        color: white;
+        transition: background 0.3s;
+      }
+      .btns button:hover {
+        background: #218838;
+      }
+      #citationChartContainer {
+        display: none; /* Initially hidden */
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" style="place-items: center;">
+      <h1>Author Lookup</h1>
+      <div class="input-group">
+        <input
+          type="text"
+          id="authorInput"
+          placeholder="Enter an author's name"
+        />
+        <button id="fetchButton">Fetch</button>
+      </div>
+      <div id="output"></div>
+      <div id="citationChartContainer">
+        <canvas id="citationChart" width="400" height="200"></canvas>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("fetchButton").addEventListener("click", () => {
+        const authorName = document.getElementById("authorInput").value.trim();
+        const output = document.getElementById("output");
+        const chartContainer = document.getElementById(
+          "citationChartContainer"
+        );
+
+        output.innerHTML = "";
+        chartContainer.style.display = "none"; // Hide chart initially
+
+        if (!authorName) {
+          output.textContent = "Please enter an author's name.";
+          return;
+        }
+
+        fetch(`/fetch_authors?author=${encodeURIComponent(authorName)}`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.error) {
+              output.textContent = `Error: ${data.error}`;
+              return;
+            }
+
+            const papers = data.author;
+
+            if (papers) {
+              const card = document.createElement("div");
+              card.className = "card";
+
+              const thumbnail = papers.thumbnail || "default-thumbnail.png";
+              const name = papers.name || "Unknown Author";
+              const affiliations =
+                papers.affiliations || "No affiliation provided";
+              const website = papers.website || "#";
+
+              let interestsHtml = "";
+              if (Array.isArray(papers.interests)) {
+                interestsHtml = `<ul>${papers.interests
+                  .map(
+                    (interest) =>
+                      `<li><a href="${interest.link}" target="_blank">${interest.title}</a></li>`
+                  )
+                  .join("")}</ul>`;
+              } else {
+                interestsHtml = "No interests provided.";
+              }
+
+              card.innerHTML = `
+          <img src="${thumbnail}" alt="${name}" class="thumbnail" />
+          <h3>${name}</h3>
+          <p><strong>Affiliation:</strong> ${affiliations}</p>
+          <p><strong>Interests:</strong> ${interestsHtml}</p>
+          <p><strong>Website:</strong> <a href="${website}" target="_blank">${website}</a></p>
+          <div class="btns">
+            <button class="papers">View Papers</button>
+            <button class="author-citation">Author Citation</button>
+          </div>
+        `;
+
+              output.appendChild(card);
+
+              // Attach click event to "Author Citation" button
+              card
+                .querySelector(".author-citation")
+                .addEventListener("click", () => {
+                  chartContainer.style.display = "block"; // Show chart
+
+                  // Calculate and display total citations
+                  const totalCitations = citationCounts.reduce(
+                    (sum, count) => sum + count,
+                    0
+                  );
+                  const totalCitationsElement = document.createElement("p");
+                  totalCitationsElement.textContent = `Total Citations: ${totalCitations}`;
+                  totalCitationsElement.style.textAlign = "center"; // Optional: Center the text
+                  totalCitationsElement.style.fontWeight = "bold"; // Optional: Make it bold
+
+                  // Append total citations to the chart container
+                  if (!chartContainer.querySelector("p")) {
+                    chartContainer.prepend(totalCitationsElement); // Avoid duplicate total citations
+                  }
+                });
+            }
+
+            const graphData = data.cited_by?.graph || [];
+            const labels = graphData.map((entry) => entry.year);
+            const citationCounts = graphData.map((entry) => entry.citations);
+
+            renderChart(labels, citationCounts);
+          })
+          .catch((error) => {
+            output.textContent = `Error: ${error}`;
+          });
+      });
+
+      function renderChart(labels, data) {
+        const ctx = document.getElementById("citationChart").getContext("2d");
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Citations Per Year",
+                data: data,
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: "Number of Citations",
+                },
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: "Year",
+                },
+              },
+            },
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Plans</title>
+    <style>
+        body {
+            
+            font-family: 'Times New Roman', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url("images/bglogin.jpeg") no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #b7afaf;
+        }
+        .pricing-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: stretch;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .pricing-plan {
+            background-color: #ffffff2e;
+            border: 1px solid #ffffff27;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            margin: 0 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .pricing-plan:hover {
+            transform: scale(1.05);
+        }
+        .plan-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .plan-price {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #241003;
+        }
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px;
+        }
+        .plan-features li {
+            margin: 10px 0;
+            color: #555;
+        }
+        .plan-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #241003;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .plan-button:hover {
+            background-color: rgba(87, 73, 46, 0.9);;
+        }
+    </style>
+</head>
+<body>
+    <div class="pricing-container">
+        <div class="pricing-plan">
+            <h2 class="plan-title">User Basic</h2>
+            <p class="plan-price">Free</p>
+            <ul class="plan-features">
+                <li>10 GB Storage</li>
+                <li>Basic Support</li>
+                <li>Single User</li>
+            </ul>
+            <a href="#" class="plan-button">Choose Plan</a>
+        </div>
+
+        <div class="pricing-plan">
+            <h2 class="plan-title">Author Pro</h2>
+            <p class="plan-price">₹199.9/mo</p>
+            <ul class="plan-features">
+                <li>50 GB Storage</li>
+                <li>Priority Support</li>
+                <li>Up to 5 Users</li>
+            </ul>
+            <a href="#" class="plan-button">Choose Plan</a>
+        </div>
+
+        <div class="pricing-plan">
+            <h2 class="plan-title">Institutional</h2>
+            <p class="plan-price">₹499.9/mo</p>
+            <ul class="plan-features">
+                <li>Unlimited Storage</li>
+                <li>24/7 Support</li>
+                <li>Unlimited Users</li>
+            </ul>
+            <a href="#" class="plan-button">Choose Plan</a>
+        </div>
+    </div>
+</body>
+</html>
