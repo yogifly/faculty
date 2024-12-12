@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publication Summarizer</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../static/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <style>
         body {
-            background: url("images/bglogin.jpeg") no-repeat center center fixed;
+            background: url("images/bglogin.jpg") no-repeat center center fixed;
             background-size: cover; /* Ensure the image covers the entire viewport */
             color: #333; /* Ensure text is readable */
             overflow-x: hidden;
@@ -93,26 +93,21 @@
 </nav>
 
 <div class="card-container mt-5">
-    <div class="card" onclick="window.location.href='/signup';">
-        <img src="url_for('static', filename='images/bglogin.jpg')" alt="Image 1">
+    <div class="card" onclick="window.location.href='bibtex.html';">
+        <img src="images/bibtex.jpg" alt="Image 1">
         <div class="card-body">
-            <h5 class="card-title">SIGNUP</h5>
-            <p class="card-text">Register your account here</p>
+            <h5 class="card-title">BIBTEX</h5>
+            <p class="card-text">Manage your BibTeX files</p>
         </div>
     </div>
-    <div class="card" onclick="window.location.href='/login';">
-        <img src="/templates/images/login.jpg" alt="Image 3">
+    <div class="card" onclick="window.location.href='excel.html';">
+        <img src="images/excel.jpg" alt="Image 2">
         <div class="card-body">
-            <h5 class="card-title">LOGIN</h5>
-            <p class="card-text">Login through email id and password</p>
+            <h5 class="card-title">EXCEL</h5>
+            <p class="card-text">Upload and manage your Excel files</p>
         </div>
     </div>
-    <div class="card" onclick="window.location.href='/pricing';">
-        <img src="/templates/images/price.jpg" alt="Image 4">
-        <div class="card-body">
-            <h5 class="card-title">Pricing</h5>
-            <p>Choose your account plan</p>
-        </div>
-    </div>
-    
-    <div>
+</div>
+
+</body>
+</html>

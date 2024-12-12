@@ -4,17 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Publication Data Uploader</title>
+    <link rel="stylesheet" href="../static/style.css">
     <style>
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-family: "Times New Roman", sans-serif;
         margin: 0;
         padding: 0;
-        background: linear-gradient(to right, #f4f7fa, #e0e5ec);
+        background: url("images/bglogin.jpg") no-repeat center center fixed;
+        background-size: cover;
         color: #333;
         display: flex;
       }
       h1 {
-        background-color: #0056b3;
+        background-color: #241003;
         color: white;
         padding: 20px;
         text-align: center;
@@ -22,17 +24,31 @@
         border-radius: 8px;
       }
       .sidebar {
-        width: 300px;
-        background-color: #ffffff;
-        padding: 20px;
-        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        margin-right: 20px;
-      }
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.29);
+            padding: 20px;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-right: 20px;
+            position: relative;
+        }
+
+        .sidebar::before {
+            position: absolute;
+            content: '';
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            backdrop-filter: blur(1px);
+            background-color: rgba(255, 255, 255, 0.3);
+            z-index: -1;
+            transition: backdrop-filter 0.3s ease-in-out, background-color 0.3s ease-in-out; 
+        }
       .sidebar form {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 10px;
       }
       label {
         font-size: 14px;
@@ -54,14 +70,14 @@
         outline: none;
       }
       button {
-        background-color: #0056b3;
+        background-color: #241003;
         color: white;
         border: none;
         cursor: pointer;
         transition: background-color 0.3s ease;
       }
       button:hover {
-        background-color: #00408d;
+        background-color: #241003;
       }
       .main-content {
         flex-grow: 1;
@@ -86,10 +102,14 @@
         outline: none;
       }
       h2 {
-        color: #0056b3;
+        color: #241003;
         margin-bottom: 20px;
         font-size: 22px;
         font-weight: 600;
+      }
+
+      h3{
+        color:#000000;
       }
       ol {
         padding-left: 0;
@@ -136,7 +156,17 @@
       .hidden {
         display: none !important;
       }
-
+      select {
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s ease;
+  }
+  select:focus {
+    border-color: #0056b3;
+    outline: none;
+  }
       @media (max-width: 768px) {
         .main-content {
           padding: 20px;
@@ -157,13 +187,16 @@
       <form action="/upload" method="post" enctype="multipart/form-data">
         <label for="fileUpload">Upload BibTeX File:</label>
         <input type="file" id="fileUpload" name="file" accept=".bib" required />
+        <br>
         <button type="submit">Upload BibTeX File</button>
       </form>
-
+      <br><br>
       <!-- Form to Search by Author Name -->
       <form action="/search" method="post">
         <label for="author">Search Publications by Author Name:</label>
+        
         <input type="text" name="author" placeholder="Enter author name" />
+        <br>
         <button type="submit">Search</button>
       </form>
 
@@ -180,8 +213,13 @@
 
       <!-- Dynamic Filter by Year Range -->
       <label for="start-year">Filter by Year Range:</label>
+      <br><br>
       <input type="number" id="startYear" placeholder="Start Year" />
+      <br><br>
+      <br><br>
       <input type="number" id="endYear" placeholder="End Year" />
+      <br><br>
+      <br><br>
     </div>
 
     <div class="main-content">

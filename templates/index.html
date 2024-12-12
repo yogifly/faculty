@@ -3,275 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publication Finder</title>
+    <title>Publication Summarizer</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <style>
         body {
-            font-family: "Times New Roman", sans-serif;
-            margin: 0;
-            padding: 0;
-            background: url("images/bglogin.jpeg") no-repeat center center fixed;
-            background-size: cover;
-            color: #333;
-            display: flex;
-            flex-direction: column;
+            background: url("images/bglogin.jpg") no-repeat center center fixed;
+            background-size: cover; /* Ensure the image covers the entire viewport */
+            color: #333; /* Ensure text is readable */
+            overflow-x: hidden;
+            font-family: 'Times New Roman', Times, serif;
         }
-
-        h1 {
-            background-color: #241003;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 30px;
-            border-radius: 8px;
-        }
-
-        .sidebar {
-            width: 300px;
-            background-color: rgba(255, 255, 255, 0.29);
-            padding: 20px;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            margin-right: 20px;
-            position: relative;
-        }
-
-        .sidebar::before {
-            position: absolute;
-            content: '';
+        .blurred-background {
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            backdrop-filter: blur(5px);
-            background-color: rgba(255, 255, 255, 0.3);
-            z-index: -1;
-            transition: backdrop-filter 0.3s ease-in-out, background-color 0.3s ease-in-out;
+            z-index: 0; /* Behind other elements */
+            filter: blur(8px); /* Apply blur effect */
         }
-
-        .sidebar form {
+        .navbar {
+            background-color: rgba(224, 216, 201, 0.9); /* Semi-transparent navbar */
+        }
+        .card-container {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow wrapping of cards */
+            padding: 200px;
+            position: relative;
+            z-index: 1; /* Stack cards over the background image */
         }
-
-        label {
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        input[type="file"],
-        input[type="number"],
-        select,
-        button {
-            padding: 12px;
-            font-size: 14px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            transition: border-color 0.3s ease;
-        }
-
-        input[type="file"]:focus,
-        input[type="number"]:focus {
-            border-color: #0056b3;
-            outline: none;
-        }
-
-        button {
-            background-color: #241003;
-            color: white;
+        .card {
+            flex: 0 1 calc(25% - 20px); /* Responsive width */
+            margin: 10px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent card background */
             border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #3a2005;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            padding: 30px;
-            overflow-x: hidden;
-        }
-
-        h2 {
-            color: #241003;
-            margin-bottom: 20px;
-            font-size: 22px;
-            font-weight: 600;
-        }
-
-        h3 {
-            color: #000000;
-        }
-
-        ul {
-            padding-left: 0;
-            list-style-type: none;
-        }
-
-        li {
-            background-color: #ffffff;
-            padding: 20px;
-            margin-bottom: 15px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: 0.3s ease;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        li:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
         }
-
-        strong {
-            font-weight: bold;
-            font-size: 16px;
-            color: #007BFF;
+        .card img {
+            width: 40%;
+            padding: 10px;
+            margin: auto;
+            display: block;
         }
-
-        .no-link {
-            color: red;
-            font-style: italic;
-        }
-
-        .publication-list-container {
-            max-height: 500px;
-            overflow-y: auto;
-            margin-top: 20px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .dynamic-search input {
-            padding: 12px;
-            width: 100%;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-        }
-
-        .dynamic-search input:focus {
-            border-color: #0056b3;
-            outline: none;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 20px;
-            }
-
-            .sidebar {
-                width: 100%;
-                margin-bottom: 20px;
-            }
+        .bottom-bar {
+            background-color: rgba(211, 198, 185, 0.9); /* Semi-transparent bottom bar */
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            z-index: 1; /* Stack above the background image */
         }
     </style>
-    <script>
-        function fetchAuthorPapers(author) {
-            fetch(`/author/${encodeURIComponent(author)}`)
-                .then(response => response.json())
-                .then(data => {
-                    const resultsDiv = document.getElementById("results");
-                    resultsDiv.innerHTML = `<h3>Results for ${author}</h3>`;
-                    if (data.length === 0) {
-                        resultsDiv.innerHTML += "<p>No papers found.</p>";
-                    } else {
-                        const ul = document.createElement("ul");
-                        data.forEach(paper => {
-                            const li = document.createElement("li");
-                            li.innerHTML = ` 
-                                <strong>${paper.title}</strong><br> 
-                                Year: ${paper.year}<br> 
-                                Type: ${paper.type}<br> 
-                                Authors: ${paper.authors.join(", ")}<br> 
-                                Abstract: ${paper.abstract || "No abstract available."}
-                            `;
-                            ul.appendChild(li);
-                        });
-                        resultsDiv.appendChild(ul);
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching author papers:", error);
-                    const resultsDiv = document.getElementById("results");
-                    resultsDiv.innerHTML = `<p>Error fetching results for ${author}.</p>`;
-                });
-        }
-    </script>
 </head>
 <body>
-    <div class="sidebar">
-        <!-- Upload Excel File -->
-        <form method="post" enctype="multipart/form-data">
-            <label for="excel_file">Upload Excel File:</label>
-            <input type="file" id="excel_file" name="excel_file" accept=".xlsx">
-            <button type="submit">Search</button>
-        </form>
 
-        <!-- Filter Options -->
-        {% if publications %}
-        <br><br>
-        <h2>Filter Publications</h2>
-        <form method="post">
-            <label for="year_from">Year From:</label>
-            <input type="number" id="year_from" name="year_from" value="{{ filters.year_from }}">
+<div class="blurred-background"></div> <!-- Blurred background layer -->
 
-            <label for="year_to">Year To:</label>
-            <input type="number" id="year_to" name="year_to" value="{{ filters.year_to }}">
-
-            <label for="type">Paper Type:</label>
-            <select id="type" name="type">
-                <option value="">All</option>
-                {% for paper_type in unique_types %}
-                    <option value="{{ paper_type }}" {% if filters.type == paper_type %}selected{% endif %}>{{ paper_type }}</option>
-                {% endfor %}
-            </select>
-
-            <button type="submit" name="filter">Apply Filters</button>
-        </form>
-        {% endif %}
+<nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" href="#">ScholarSync</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Services</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+            </li>
+        </ul>
     </div>
-    <div class="main-content">
-        <h1>Publication Finder</h1>
+</nav>
 
-        <!-- Dynamic Search Bar -->
-        <div class="dynamic-search">
-            <input type="text" id="dynamicSearch" placeholder="Search within results...">
-        </div>
-
-        <!-- Display Author Buttons -->
-        {% if authors %}
-        <h2>Authors</h2>
-        <div class="dynamic-search">
-            {% for author in authors %}
-            <button onclick="fetchAuthorPapers('{{ author|escape }}')">{{ author }}</button>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <!-- Display Results -->
-        <div id="results">
-            <h2>Filtered Results</h2>
-            {% for author, papers in publications.items() %}
-                <h3>{{ author }}</h3>
-                <ul>
-                    {% for paper in papers %}
-                    <li>
-                        <strong>{{ paper.title }}</strong><br>
-                        Year: {{ paper.year }}<br>
-                        Type: {{ paper.type }}<br>
-                        Authors: {{ paper.authors|join(", ") }}<br>
-                    </li>
-                    {% endfor %}
-                </ul>
-            {% endfor %}
+<div class="card-container mt-5">
+    <div class="card" onclick="window.location.href='signup.html';">
+        <img src="images/bibtex.jpg" alt="Image 1">
+        <div class="card-body">
+            <h5 class="card-title">SIGNUP</h5>
+            <p class="card-text">Register your account here</p>
         </div>
     </div>
-</body>
-</html>
+    <div class="card" onclick="window.location.href='login.html';">
+        <img src="images/login.jpg" alt="Image 3">
+        <div class="card-body">
+            <h5 class="card-title">LOGIN</h5>
+            <p class="card-text">Login through email id and password</p>
+        </div>
+    </div>
+    <!-- <div class="card" onclick="window.location.href='excel.html';">
+        <img src="images/excel.jpg" alt="Image 2">
+        <div class="card-body">
+            <h5 class="card-title">Excel</h5>
+            <p class="card-text">Upload your excel files </p>
+        </div>
+    </div> -->
+    <div class="card" onclick="window.location.href='pricing.html';">
+        <img src="images/price.jpg" alt="Image 4">
+        <div class="card-body">
+            <h5 class="card-title">Pricing</h5>
+            <p>Choose your account plan</p>
+        </div>
+    <div>
